@@ -107,7 +107,6 @@ def set_widgets(root, instance, new_window, default:int = None):
         return (category, name, tags, template_text, add_template_button)
 
     def configure_middle_frame(category, name, tags, template_text, add_template_button):
-        # Add all templates in the database
 
         def widget_layout(canvas, _instance, scrollable_frame, template, row_index):
             """Create and add row widgets to scrollable frame."""
