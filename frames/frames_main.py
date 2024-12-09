@@ -3,6 +3,8 @@
 import tkinter as tk
 from tkinter import ttk
 from frames.frames_left import LeftFrame
+from frames.frames_top import TopFrame
+from frames.frames_bottom import BottomFrame
 from data import config
 from utils.copy import copy
 
@@ -16,8 +18,9 @@ class TemplatePro():
         self.default_tab = 0
         self.configure_root_window(root)
         # self.configure_styles()
+        self.configure_grid(root)
         self.create_frames(root)
-        # self.configure_grid(root)
+        
 
     def configure_root_window(self, root):
         """Configure the main window."""
@@ -54,6 +57,8 @@ class TemplatePro():
         #     row=1, col=0, rowspan=6, width=32, height=250
         # )
         left_frame = LeftFrame(root)
+        top_frame = TopFrame(root)
+        bottom_frame = BottomFrame(root)
 
         # # Add top body frame
         # self.create_body_section(root)
@@ -158,20 +163,20 @@ class TemplatePro():
 
         return frame
 
-    # def configure_grid(self, root):
-    #     """Configure grid row and column weights and minimum sizes."""
-    #     row_config = {
-    #         0: {"minsize": 32}, 1: {"minsize": 32},
-    #         2: {"weight": 1}, 3: {"minsize": 32},
-    #         4: {"minsize": 8}, 5: {"minsize": 32},
-    #         6: {"weight": 1}, 7: {"minsize": 32},
-    #         8: {"minsize": 32}
-    #     }
-    #     for row, config_values in row_config.items():
-    #         root.grid_rowconfigure(row, **config_values)
+    def configure_grid(self, root):
+        """Configure grid row and column weights and minimum sizes."""
+        row_config = {
+            0: {"minsize": 32}, 1: {"minsize": 32},
+            2: {"weight": 1}, 3: {"minsize": 32},
+            4: {"minsize": 8}, 5: {"minsize": 32},
+            6: {"weight": 1}, 7: {"minsize": 32},
+            8: {"minsize": 32}
+        }
+        for row, config_values in row_config.items():
+            root.grid_rowconfigure(row, **config_values)
 
-    #     root.grid_columnconfigure(0, minsize=32)
-    #     root.grid_columnconfigure(1, weight=1)
+        root.grid_columnconfigure(0, minsize=32)
+        root.grid_columnconfigure(1, weight=1)
 
     # def on_resize(self, event):
     #     """Debug method to get the current window size."""
