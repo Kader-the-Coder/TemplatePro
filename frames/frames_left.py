@@ -23,7 +23,7 @@ class LeftFrame(BaseFrame):
 
     def _initialize(self):
         frame = ttk.Frame(self.root, borderwidth=config.FRAME_BORDER_WIDTH, relief=config.FRAME_RELIEF)
-        frame.grid(row=1, column=0, sticky="nsw", padx=config.PADDING, pady=config.PADDING)
+        frame.grid(row=1, column=0, rowspan=2, sticky="nsw", padx=config.PADDING, pady=config.PADDING)
         print(f"Initializing {self.root.winfo_name()}.{self.frame_name}")
         return frame
 

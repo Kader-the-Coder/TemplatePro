@@ -18,18 +18,21 @@ class BodyFrame(BaseFrame):
     """
     def __init__(self, root):
         super().__init__(root, 'body_frame')
-        self.frame = self._initialize()
+        self.frame, self.search_entry = self._initialize()
         self._add_widgets()
         self._style_widgets()
 
     def _initialize(self):
+        search_entry = ttk.Entry(self.root, style="entry.TEntry")
+        search_entry.grid(row=1, column=1, columnspan=2, sticky="ew", padx=config.PADDING, pady=config.PADDING)
         frame = ttk.Frame(self.root, borderwidth=config.FRAME_BORDER_WIDTH, relief=config.FRAME_RELIEF)
-        frame.grid(row=1, column=1, columnspan=2, sticky="nsew", padx=config.PADDING, pady=config.PADDING)
-        frame.grid_rowconfigure(0, weight=1)
+        frame.grid(row=2, column=1, columnspan=2, sticky="nsew", padx=config.PADDING, pady=config.PADDING)
+        frame.grid_rowconfigure(0, weight=0)
+        frame.grid_rowconfigure(1, weight=1)
         frame.grid_columnconfigure(0, weight=1)
         frame.grid_columnconfigure(1, weight=1)
         print(f"Initializing {self.root.winfo_name()}.{self.frame_name}")
-        return frame
+        return frame, search_entry
 
     def _add_widgets(self):
         # def on_tab_change(event):
