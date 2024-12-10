@@ -5,8 +5,8 @@ from tkinter import ttk
 from frames.frames_left import LeftFrame
 from frames.frames_top import TopFrame
 from frames.frames_bottom import BottomFrame
+from frames.frames_body import BodyFrame
 from data import config
-from utils.copy import copy
 
 
 class TemplatePro():
@@ -18,8 +18,9 @@ class TemplatePro():
         self.default_tab = 0
         self.configure_root_window(root)
         # self.configure_styles()
-        self.configure_grid(root)
         self.create_frames(root)
+        self.configure_grid(root)
+        
         
 
     def configure_root_window(self, root):
@@ -59,6 +60,7 @@ class TemplatePro():
         left_frame = LeftFrame(root)
         top_frame = TopFrame(root)
         bottom_frame = BottomFrame(root)
+        body_frame = BodyFrame(root)
 
         # # Add top body frame
         # self.create_body_section(root)
@@ -143,25 +145,6 @@ class TemplatePro():
     #         padx=config.PADDING, pady=config.PADDING,
     #         sticky="e"
     #     )
-
-    def add_frame(self, root, style, widget_func,
-                  row, col, rowspan=1, colspan=1,
-                  width=0, height=0):
-        """Helper function to add and configure a frame."""
-        frame = ttk.Frame(
-            root, borderwidth=config.FRAME_BORDER_WIDTH,
-            relief=config.FRAME_RELIEF, width=width, height=height,
-            style=style
-        )
-        frame.grid(
-            row=row, column=col, rowspan=rowspan,
-            columnspan=colspan, padx=config.PADDING,
-            pady=config.PADDING, sticky="nsew"
-        )
-        if widget_func:
-            widget_func(frame, self)
-
-        return frame
 
     def configure_grid(self, root):
         """Configure grid row and column weights and minimum sizes."""

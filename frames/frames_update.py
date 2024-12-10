@@ -5,7 +5,7 @@ from tkinter import ttk
 from tkinter import messagebox
 from utils import database
 from utils.widgets import (
-    highlight_row, add_scrollable_frame, bind_scroll_events, add_widgets
+    highlight_frames, add_scrollable_frame, bind_scroll_events, add_widgets_to_tab
 )
 
 
@@ -135,7 +135,7 @@ def set_widgets(root, instance, new_window, default:int = None):
             button.grid(row=row_index, column=1, sticky="e")
 
             # Bind hover events for row highlight
-            highlight_row([label, button])
+            highlight_frames([label, button])
 
             # Apply bindings to widgets
             bind_scroll_events(label, canvas)
@@ -151,7 +151,7 @@ def set_widgets(root, instance, new_window, default:int = None):
                 edit_template()
 
         canvas, scrollable_frame = add_scrollable_frame(frame_middle)
-        add_widgets(widget_layout, instance, canvas, scrollable_frame)
+        add_widgets_to_tab(widget_layout, instance, canvas, scrollable_frame)
 
     def configure_bottom_frame():
 

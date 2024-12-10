@@ -22,7 +22,7 @@ class BottomFrame(BaseFrame):
 
     def _initialize(self):
         frame = ttk.Frame(self.root, borderwidth=config.FRAME_BORDER_WIDTH, relief=config.FRAME_RELIEF)
-        frame.grid(row=3, column=0, sticky="ew", padx=config.PADDING, pady=config.PADDING)
+        frame.grid(row=3, column=0, columnspan=2, sticky="ew", padx=config.PADDING, pady=config.PADDING)
         # Adjust row and column weights to make the frame responsive
         frame.grid_rowconfigure(0, weight=1)
         frame.grid_columnconfigure(0, weight=0)

@@ -20,7 +20,7 @@ class TopFrame(BaseFrame):
 
     def _initialize(self):
         frame = ttk.Frame(self.root, borderwidth=config.FRAME_BORDER_WIDTH, relief=config.FRAME_RELIEF)
-        frame.grid(row=0, column=0, sticky="nsew", padx=config.PADDING, pady=config.PADDING)
+        frame.grid(row=0, column=0, columnspan=2, sticky="nsew", padx=config.PADDING, pady=config.PADDING)
         frame.grid_rowconfigure(0, weight=1)
         frame.grid_columnconfigure(0, weight=1)
         frame.grid_columnconfigure(1, weight=1)
