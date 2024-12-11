@@ -74,34 +74,34 @@ class TemplatePro():
     # def create_body_section(self, root):
     #     """Create the body section with search entry and buttons."""
 
-    #     def on_text_change(*_args):
-    #         """
-    #         Get the current text from the StringVar - NEEDS OPTIMIZATION!!!
-    #         """
-    #         current_text = text_var.get()
+        # def on_text_change(*_args):
+        #     """
+        #     Get the current text from the StringVar - NEEDS OPTIMIZATION!!!
+        #     """
+        #     current_text = text_var.get()
 
-    #         # Preprocess text into a list of tags.
-    #         current_text = [
-    #             tag.strip() for tag in current_text.split(",")
-    #             ] if current_text else None
-    #         print(current_text)  # DEBUG PRINT
+        #     # Preprocess text into a list of tags.
+        #     current_text = [
+        #         tag.strip() for tag in current_text.split(",")
+        #         ] if current_text else None
+        #     print(current_text)  # DEBUG PRINT
 
-    #         # Destroy each and recreate each widget in body frame
-    #         # (HIGH CPU UTILIZATION - OPTIMIZATION NEEDED)
-    #         for widget in body_frame.winfo_children():
-    #             widget.destroy()
-    #         frames_body.set_widgets(
-    #             body_frame, self, current_text, self.default_tab
-    #             )
+        #     # Destroy each and recreate each widget in body frame
+        #     # (HIGH CPU UTILIZATION - OPTIMIZATION NEEDED)
+        #     for widget in body_frame.winfo_children():
+        #         widget.destroy()
+        #     frames_body.set_widgets(
+        #         body_frame, self, current_text, self.default_tab
+        #         )
 
-    #     text_var = tk.StringVar()
-    #     text_var.trace_add("write", on_text_change)
-    #     search_entry = ttk.Entry(root, style="entry.TEntry", text=text_var)
-    #     search_entry.grid(
-    #         row=1, column=1, columnspan=2,
-    #         padx=config.PADDING, pady=config.PADDING,
-    #         sticky="nsew"
-    #     )
+        # text_var = tk.StringVar()
+        # text_var.trace_add("write", on_text_change)
+        # search_entry = ttk.Entry(root, style="entry.TEntry", text=text_var)
+        # search_entry.grid(
+        #     row=1, column=1, columnspan=2,
+        #     padx=config.PADDING, pady=config.PADDING,
+        #     sticky="nsew"
+        # )
 
     #     body_frame = self.add_frame(
     #         root, "frameBody.TFrame", frames_body.set_widgets,

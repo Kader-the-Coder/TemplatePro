@@ -19,12 +19,19 @@ class BodyFrame(BaseFrame):
     def __init__(self, root):
         super().__init__(root, 'body_frame')
         self.frame, self.search_entry = self._initialize()
-        self._add_widgets()
+        self.search_tags = None
+        self._add_widgets(self.search_tags)
         self._style_widgets()
 
     def _initialize(self):
-        search_entry = ttk.Entry(self.root, style="entry.TEntry")
-        search_entry.grid(row=1, column=1, columnspan=2, sticky="ew", padx=config.PADDING, pady=config.PADDING)
+        text_var = tk.StringVar()
+        text_var.trace_add("write", self._set_event_handlers(2))
+        search_entry = ttk.Entry(self.root, style="entry.TEntry", textvariable=text_var)
+        search_entry.grid(
+            row=1, column=1, columnspan=2,
+            padx=config.PADDING, pady=config.PADDING,
+            sticky="nsew"
+            )        
         frame = ttk.Frame(self.root, borderwidth=config.FRAME_BORDER_WIDTH, relief=config.FRAME_RELIEF)
         frame.grid(row=2, column=1, columnspan=2, sticky="nsew", padx=config.PADDING, pady=config.PADDING)
         frame.grid_rowconfigure(0, weight=0)
@@ -32,9 +39,9 @@ class BodyFrame(BaseFrame):
         frame.grid_columnconfigure(0, weight=1)
         frame.grid_columnconfigure(1, weight=1)
         print(f"Initializing {self.root.winfo_name()}.{self.frame_name}")
-        return frame, search_entry
+        return frame, (search_entry, text_var)
 
-    def _add_widgets(self):
+    def _add_widgets(self, tags=None):
         # def on_tab_change(event):
         #     """Store selected tab in instance class when reloading widgets."""
         #     notebook = event.widget
@@ -46,7 +53,6 @@ class BodyFrame(BaseFrame):
 
         # Create and add tabs for each category in the database
         categories = database.get_categories()
-        tags = []
         for _, category in enumerate(categories):
             tab_frame = ttk.Frame(notebook)
             if tags:
@@ -84,7 +90,7 @@ class BodyFrame(BaseFrame):
                 widget.grid(row=0, column=1, sticky="we")
 
                 # Add "edit" button to frame
-                button = tk.Button(frame, text="Edit", width=4, command=lambda: self._set_event_handlers(2))
+                button = tk.Button(frame, text="Edit", width=4, command=lambda: self._set_event_handlers(3))
                 button.grid(row=0, column=2, sticky="e")
 
                 frames.append(frame)
@@ -127,8 +133,28 @@ class BodyFrame(BaseFrame):
             """Copy text of button to clipboard."""
             copy(text)
 
+        def on_text_change(*_args):
+            """
+            Get the current text from the StringVar - NEEDS OPTIMIZATION!!!
+            """
+            self.search_tags = self.search_entry[1].get()
+
+            # Preprocess text into a list of tags.
+            self.search_tags = [
+                tag.strip() for tag in self.search_tags.split(",")
+                ] if self.search_tags else None
+            print(self.search_tags)  # DEBUG PRINT
+
+            # Destroy each and recreate each widget in body frame
+            # (HIGH CPU UTILIZATION - OPTIMIZATION NEEDED)
+            for widget in self.frame.winfo_children():
+                widget.destroy()
+            self._add_widgets(self.search_tags)
+
         if event_number == 1:
             return copy_clicked
+        elif event_number == 2:
+            return on_text_change
 
         print(f"Setting event handlers for {self.frame_name}")
         return None
