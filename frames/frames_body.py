@@ -20,6 +20,7 @@ class BodyFrame(BaseFrame):
         super().__init__(root, 'body_frame')
         self.frame, self.search_entry = self._initialize()
         self.search_tags = None
+        self.tab = 0
         self._add_widgets(self.search_tags)
         self._style_widgets()
 
@@ -90,11 +91,12 @@ class BodyFrame(BaseFrame):
                 widget.grid(row=0, column=1, sticky="we")
 
                 # Add "edit" button to frame
-                button = tk.Button(frame, text="Edit", width=4, command=lambda: self._set_event_handlers(3))
+                button = tk.Button(frame, text="Edit", width=4, command=lambda: self._set_event_handlers(4))
                 button.grid(row=0, column=2, sticky="e")
 
                 frames.append(frame)
             
+            notebook.bind("<<NotebookTabChanged>>", self._set_event_handlers(3))
             bind_scroll_events_to_all(scrollable_frame, canvas)
             highlight_frames(frames)
 
@@ -149,12 +151,27 @@ class BodyFrame(BaseFrame):
             # (HIGH CPU UTILIZATION - OPTIMIZATION NEEDED)
             for widget in self.frame.winfo_children():
                 widget.destroy()
+            
+            # Ensure that the current tab remains selected
             self._add_widgets(self.search_tags)
+            notebook = next(
+                (child for child in self.frame.winfo_children() if isinstance(child, ttk.Notebook)),
+                None
+                )
+            notebook.select(self.tab)
+
+        def on_tab_selected(event):
+            # Get the currently selected tab index
+            selected_tab_index = event.widget.index(event.widget.select())
+            self.tab = selected_tab_index
+            print(f"Tab {selected_tab_index + 1} selected")
 
         if event_number == 1:
             return copy_clicked
         elif event_number == 2:
             return on_text_change
+        elif event_number == 3:
+            return on_tab_selected
 
         print(f"Setting event handlers for {self.frame_name}")
         return None

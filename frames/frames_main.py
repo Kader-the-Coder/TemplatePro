@@ -45,106 +45,11 @@ class TemplatePro():
 
     def create_frames(self, root):
         """Create and place frames and widgets."""
-
-        # # Add top frame
-        # self.add_frame(
-        #     root, "frameTop.TFrame", frames_top.set_widgets,
-        #     row=0, col=0, colspan=3, width=400, height=32
-        # )
-
-        # Add left frame (Side button frame)
-        # self.add_frame(
-        #     root, "frameLeft.TFrame", frames_left.set_widgets,
-        #     row=1, col=0, rowspan=6, width=32, height=250
-        # )
         left_frame = LeftFrame(root)
         top_frame = TopFrame(root)
         bottom_frame = BottomFrame(root)
         body_frame = BodyFrame(root)
-
-        # # Add top body frame
-        # self.create_body_section(root)
-
-        # # Add bottom frame
-        # self.add_frame(
-        #     root, "frameTop.TFrame", frames_bottom.set_widgets,
-        #     row=8, col=0, colspan=3, width=400, height=32
-        # )
-
-    # def create_body_section(self, root):
-    #     """Create the body section with search entry and buttons."""
-
-        # def on_text_change(*_args):
-        #     """
-        #     Get the current text from the StringVar - NEEDS OPTIMIZATION!!!
-        #     """
-        #     current_text = text_var.get()
-
-        #     # Preprocess text into a list of tags.
-        #     current_text = [
-        #         tag.strip() for tag in current_text.split(",")
-        #         ] if current_text else None
-        #     print(current_text)  # DEBUG PRINT
-
-        #     # Destroy each and recreate each widget in body frame
-        #     # (HIGH CPU UTILIZATION - OPTIMIZATION NEEDED)
-        #     for widget in body_frame.winfo_children():
-        #         widget.destroy()
-        #     frames_body.set_widgets(
-        #         body_frame, self, current_text, self.default_tab
-        #         )
-
-        # text_var = tk.StringVar()
-        # text_var.trace_add("write", on_text_change)
-        # search_entry = ttk.Entry(root, style="entry.TEntry", text=text_var)
-        # search_entry.grid(
-        #     row=1, column=1, columnspan=2,
-        #     padx=config.PADDING, pady=config.PADDING,
-        #     sticky="nsew"
-        # )
-
-    #     body_frame = self.add_frame(
-    #         root, "frameBody.TFrame", frames_body.set_widgets,
-    #         row=2, col=1, rowspan=5, colspan=2, width=280
-    #     )
-        
-    #     def copy_checked():
-    #         """
-    #         Copies all associated texts from the checked Checkboxes in
-    #         the selected tab to clipboard.
-    #         """
-    #         text_to_copy = ""
-
-    #         # Get the frame containing the checkboxes in the selected tab
-    #         notebook = body_frame.winfo_children()[0]
-    #         selected_tab = notebook.nametowidget(notebook.select())
-    #         canvas = selected_tab.winfo_children()[0]
-    #         scrollable_frame_id = canvas.find_all()[0]
-    #         scrollable_frame = canvas.nametowidget(canvas.itemcget(scrollable_frame_id, 'window'))
-
-    #         # Retrieve the associated text from all checked Checkboxes
-    #         associated_texts = []
-    #         for widget in scrollable_frame.winfo_children():
-    #             if isinstance(widget, tk.Checkbutton) and widget.checked.get():
-    #                 associated_text = getattr(widget, "associated_text", None)
-    #                 if associated_text:
-    #                     associated_texts.append(associated_text)
-    #                 widget.checked.set(0)
-
-    #         # Join all the associated texts with newline characters
-    #         text_to_copy = "\n".join(associated_texts)
-
-    #         copy(text_to_copy)
-
-
-    #     copy_button = ttk.Button(
-    #         root, text="Copy", style="button.TButton", command=copy_checked
-    #     )
-    #     copy_button.grid(
-    #         row=7, column=2,
-    #         padx=config.PADDING, pady=config.PADDING,
-    #         sticky="e"
-    #     )
+        return left_frame, top_frame, bottom_frame, body_frame
 
     def configure_grid(self, root):
         """Configure grid row and column weights and minimum sizes."""
