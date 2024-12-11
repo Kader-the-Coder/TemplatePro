@@ -43,13 +43,6 @@ class BodyFrame(BaseFrame):
         return frame, (search_entry, text_var)
 
     def _add_widgets(self, tags=None):
-        # def on_tab_change(event):
-        #     """Store selected tab in instance class when reloading widgets."""
-        #     notebook = event.widget
-        #     selected_tab_id = notebook.select()
-        #     instance.default_tab = notebook.index(selected_tab_id)
-
-        # Create a notebook to hold the tabs for each category
         notebook = ttk.Notebook(self.frame, style='TNotebook')
 
         # Create and add tabs for each category in the database

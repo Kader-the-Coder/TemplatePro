@@ -4,7 +4,9 @@ import tkinter as tk
 from tkinter import ttk
 from data import config
 from frames import frames_update
-from .frames_base import BaseFrame
+from frames.frames_base import BaseFrame
+from frames.frames_update import UpdateFrame
+from utils.windows import open_new_window
 
 
 class BottomFrame(BaseFrame):
@@ -34,7 +36,7 @@ class BottomFrame(BaseFrame):
     def _add_widgets(self):
         button_load = ttk.Button(
             self.frame, text="UPDATE", style="button.TButton",
-            command=lambda frame=self.frame: self._set_event_handlers(1)(frame)
+            command=self._set_event_handlers(1)
             )
         button_load.grid(row=0, column=1, padx=config.PADDING, pady=config.PADDING, sticky="ew")
         print(f"Adding widgets to {self.frame_name}")
@@ -45,36 +47,11 @@ class BottomFrame(BaseFrame):
         print(f"Styling widgets in {self.frame_name}")
 
     def _set_event_handlers(self, event_number):
-        def open_new_window(frame, default:int = None):
-            """Create a new window that overlaps the main window and hides the parent."""
-            root = self.frame.winfo_toplevel()
-            root.withdraw()  # Hide the parent window
-
-            new_window = tk.Toplevel(root)
-            new_window.title("Templates")
-            new_window.wm_attributes('-topmost', 1)
-
-            # Ensure new window overlaps old window.
-            root_width = root.winfo_width()
-            root_height = root.winfo_height()
-            root_x = root.winfo_x()
-            root_y = root.winfo_y()
-            new_window.geometry(f"{root_width}x{root_height}+{root_x}+{root_y}")
-
-            frames_update.set_widgets(root, new_window, default)
-
-            def on_child_close(root, new_window):
-                """Closes the main window when the child is closed."""
-                new_window.destroy()
-                root.destroy()
-
-            new_window.protocol(
-                "WM_DELETE_WINDOW",
-                lambda root=root, new_window=new_window: on_child_close(root, new_window)
-                )
+        def open_frames_update_window():
+            open_new_window(self.frame, UpdateFrame, 'update_frame')
 
         if event_number == 1:
-            return open_new_window
+            return open_frames_update_window
 
         print(f"Setting event handlers for {self.frame_name}")
         return None
