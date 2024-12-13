@@ -16,8 +16,9 @@ class UpdateFrame(BaseFrame):
         frame_name (str): Name of the frame.
     """
     def __init__(self, root, new_root, context):
-        super().__init__(root, 'update_frame')
+        super().__init__(root)
         self.new_root = new_root
+        self.context = context
         self.frame_top, self.frame_bottom = self._initialize()
         self._add_widgets()
         self._style_widgets()
@@ -57,11 +58,10 @@ class UpdateFrame(BaseFrame):
         self.new_root.grid_rowconfigure(0, weight=1)
         self.new_root.grid_columnconfigure(0, weight=1)
 
-        print(f"Initializing {self.root.winfo_name()}.{self.frame_name}")
         return frame_top, frame_bottom
 
     def _add_widgets(self):
-        configure_top_frame(self.frame_top)
+        configure_top_frame(self.frame_top, self.context, self._set_event_handlers(1))
         configure_bottom_frame(self.frame_bottom, self._set_event_handlers(1))
 
     def _style_widgets(self):
@@ -82,11 +82,10 @@ class UpdateFrame(BaseFrame):
         if event_number == 1:
             return close_window
 
-        print(f"Setting event handlers for {self.frame_name}")
         return None
 
 
-def configure_top_frame(frame):
+def configure_top_frame(frame, context, func):
     """
     Configure the top frame of the update window.
 
@@ -110,64 +109,80 @@ def configure_top_frame(frame):
     tags = tk.Entry(frame)
     template_text = tk.Text(frame, height=5, wrap="word", undo=True, autoseparators=True)
 
-    def add_update_template():
+    def create_template():
         new_category = category.get()
         if new_category in [c[0] for c in database.get_categories()]:
             new_name = name.get()
             new_tags = [tag.strip() for tag in tags.get().split(",")]
             new_template = template_text.get("1.0", tk.END).strip()
-
-            # Update an existing template
-            if add_template_button.template:
-                new_name = name.get()
-                new_tags = [tag.strip() for tag in tags.get().split(",")]
-                new_template = template_text.get("1.0", tk.END).strip()
-                database.update_template(
-                    add_template_button.template,
-                    new_category,
-                    new_name,
-                    new_tags,
-                    new_template
-                    )
-                if default:
-                    close_new_window(root, new_window, instance)
-                return
-
-            # Create a new template
             database.create_template(
                 new_name,
                 new_template,
                 new_category,
-                new_tags,
+                new_tags
                 )
-            cancel_template()
+            messagebox.showinfo("Info", "Template has been created.")
+            func(frame.winfo_toplevel())
             return
-        
-        messagebox.showerror("ERROR", "Category does not exist.")  
+        messagebox.showerror("ERROR", "Category does not exist.")
 
-    def cancel_template():
-        if default:
-            close_new_window(root, new_window, instance)
+    def update_template():
+        new_category = category.get()
+        if new_category in [c[0] for c in database.get_categories()]:
+            new_name = name.get()
+            new_tags = [tag.strip() for tag in tags.get().split(",")]
+            new_template = template_text.get("1.0", tk.END).strip()
+            # Create a new template
+            database.update_template(
+                context["template_id"],
+                new_category,
+                new_name,
+                new_tags,
+                new_template,
+                )
+            messagebox.showinfo("Info", "Template has been updated.")
+            func(frame.winfo_toplevel())
             return
+        messagebox.showerror("ERROR", "Category does not exist.")
+
+    def clear_template():
         category.delete(0, tk.END)
         name.delete(0, tk.END)
         tags.delete(0, tk.END)
         template_text.delete(1.0, tk.END)
-        add_template_button.template = None
-        add_template_button.configure(text="Insert")
+
+    def cancel_template():
+        clear_template()
+        category.insert(0, context["category"])
+        name.insert(0, context["name"])
+        tags.insert(0, ", ".join(context["tags"]))
+        template_text.insert(1.0, context["template"])
 
     def delete_template():
-        if add_template_button.template:
-            if messagebox.askokcancel("Warning", "Delete template?"):
-                database.delete_template(add_template_button.template)
-                messagebox.showinfo("Info", "Template has been deleted.")
-
-    add_template_button = tk.Button(frame, text="Insert", command=add_update_template)
-    add_template_button.template = None  # For editing templates
-    cancel_add_template_button = tk.Button(frame, text="Cancel", command=cancel_template)
-    delete_add_template_button = tk.Button(frame, text="Delete", command=delete_template)
+        if messagebox.askokcancel("Warning", "Delete template?"):
+            database.delete_template(context["template_id"])
+            messagebox.showinfo("Info", "Template has been deleted.")
+            func(frame.winfo_toplevel())
 
     # Add widgets to top frame
+    add_update_template_button = None
+    cancel_clear_template_button = None
+    delete_template_button = None
+    # If a template has been selected
+    if context:
+        category.insert(0, context["category"])
+        name.insert(0, context["name"])
+        tags.insert(0, ", ".join(context["tags"]))
+        template_text.insert(1.0, context["template"])
+        add_update_template_button = tk.Button(frame, text="Update", command=update_template)
+        cancel_clear_template_button = tk.Button(frame, text="Cancel", command=cancel_template)
+        delete_template_button = tk.Button(frame, text="Delete", command=delete_template)
+        delete_template_button.grid(row=4, column=0, sticky="ew")
+    else:
+        add_update_template_button = tk.Button(frame, text="Create", command=create_template)
+        cancel_clear_template_button = tk.Button(frame, text="Clear", command=clear_template)
+    add_update_template_button.grid(row=4, column=2, sticky="ew")
+    cancel_clear_template_button.grid(row=4, column=1, sticky="ew")
     category_label.grid(row=0, column=0, sticky="nsew")
     category.grid(row=0, column=1, columnspan=2, sticky="nsew")
     name_label.grid(row=1, column=0, sticky="nsew")
@@ -175,9 +190,6 @@ def configure_top_frame(frame):
     tag_label.grid(row=2, column=0, sticky="nsew")
     tags.grid(row=2, column=1, columnspan=2, sticky="nsew")
     template_text.grid(row=3, column=0, columnspan=3, sticky="nsew")
-    add_template_button.grid(row=4, column=2, sticky="ew")
-    cancel_add_template_button.grid(row=4, column=1, sticky="ew")
-    delete_add_template_button.grid(row=4, column=0, sticky="ew")
 
     # Configure the grid for the top frame
     frame.grid_rowconfigure(0, weight=0)
@@ -187,9 +199,6 @@ def configure_top_frame(frame):
     frame.grid_columnconfigure(0, weight=1)
     frame.grid_columnconfigure(1, weight=1)
     frame.grid_columnconfigure(2, weight=1)
-
-    return (category, name, tags, template_text, add_template_button)
-
 
 def configure_bottom_frame(frame, func):
     """

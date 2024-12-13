@@ -2,7 +2,6 @@ import tkinter as tk
 
 def open_new_window(current_frame, new_frame=None, context=None):
     """Create a new window that overlaps the main window and hides the parent."""
-    print("HERE")
     def on_child_close(root, new_window):
         """Closes the main window when the child is closed."""
         new_window.destroy()
@@ -21,7 +20,6 @@ def open_new_window(current_frame, new_frame=None, context=None):
     root_x = root.winfo_x()
     root_y = root.winfo_y()
     new_window.geometry(f"{root_width}x{root_height}+{root_x}+{root_y}")
-
 
     new_window.protocol(
         "WM_DELETE_WINDOW",

@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 
+
 class BaseFrame(ABC):
     """
     Base class for frame modules.
@@ -8,9 +9,9 @@ class BaseFrame(ABC):
     methods for initializing the frame layout, adding widgets,
     styling widgets, and setting event handlers.
     """
-    def __init__(self, root, frame_name):
+    def __init__(self, root):
         self.root = root
-        self.frame_name = frame_name
+        self.root.reload_widgets = self.reload_widgets
 
     @abstractmethod
     def _initialize(self):
@@ -36,3 +37,13 @@ class BaseFrame(ABC):
         Returns:
             function: The event handler function corresponding to the event number.
         """
+    def _on_reload(self):
+        """Callback method to be implemented by subclasses."""
+        self.root.reload_widgets()
+
+    def reload_widgets(self):
+        """Clear and repopulate the window's content."""
+        for widget in self.root.winfo_children():
+            widget.destroy()
+        self._on_reload()
+

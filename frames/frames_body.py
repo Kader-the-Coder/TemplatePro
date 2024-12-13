@@ -6,7 +6,10 @@ from data import config
 from utils import database
 from utils.widgets import (highlight_frames, add_scrollable_frame, bind_scroll_events_to_all)
 from utils.copy import copy
+from utils.windows import open_new_window
+from utils.database import get_categories, get_tags
 from .frames_base import BaseFrame
+from .frames_update import UpdateFrame
 
 
 class BodyFrame(BaseFrame):
@@ -17,7 +20,7 @@ class BodyFrame(BaseFrame):
         frame_name (str): The name of the frame.
     """
     def __init__(self, root):
-        super().__init__(root, 'body_frame')
+        super().__init__(root)
         self.frame, self.search_entry = self._initialize()
         self.search_tags = None
         self.tab = 0
@@ -32,14 +35,13 @@ class BodyFrame(BaseFrame):
             row=1, column=1, columnspan=2,
             padx=config.PADDING, pady=config.PADDING,
             sticky="nsew"
-            )        
+            )
         frame = ttk.Frame(self.root, borderwidth=config.FRAME_BORDER_WIDTH, relief=config.FRAME_RELIEF)
         frame.grid(row=2, column=1, columnspan=2, sticky="nsew", padx=config.PADDING, pady=config.PADDING)
         frame.grid_rowconfigure(0, weight=0)
         frame.grid_rowconfigure(1, weight=1)
         frame.grid_columnconfigure(0, weight=1)
         frame.grid_columnconfigure(1, weight=1)
-        print(f"Initializing {self.root.winfo_name()}.{self.frame_name}")
         return frame, (search_entry, text_var)
 
     def _add_widgets(self, tags=None):
@@ -84,7 +86,7 @@ class BodyFrame(BaseFrame):
                 widget.grid(row=0, column=1, sticky="we")
 
                 # Add "edit" button to frame
-                button = tk.Button(frame, text="Edit", width=4, command=lambda: self._set_event_handlers(4))
+                button = tk.Button(frame, text="Edit", width=4, command=lambda context=template: self._set_event_handlers(4)(context))
                 button.grid(row=0, column=2, sticky="e")
 
                 frames.append(frame)
@@ -92,10 +94,8 @@ class BodyFrame(BaseFrame):
             notebook.bind("<<NotebookTabChanged>>", self._set_event_handlers(3))
             bind_scroll_events_to_all(scrollable_frame, canvas)
             highlight_frames(frames)
-
             
         notebook.grid(row=0, column=0, sticky="nsew")
-        print(f"Adding widgets to {self.frame_name}")
 
     def _style_widgets(self):
         style = ttk.Style()
@@ -103,7 +103,6 @@ class BodyFrame(BaseFrame):
         style.map("TNotebook.Tab",
             foreground=[('selected', 'black'), ('!selected', '#665956')],
             )
-        print(f"Styling widgets in {self.frame_name}")
 
     def _set_event_handlers(self, event_number):
         # def open_new_window(frame, default:int = None):
@@ -159,12 +158,24 @@ class BodyFrame(BaseFrame):
             self.tab = selected_tab_index
             print(f"Tab {selected_tab_index + 1} selected")
 
+        def open_frames_update_window(context):
+            context = {
+                "category": get_categories()[context[3] - 1],
+                "name": context[1],
+                "tags": get_tags(context[0]),
+                "template": context[2],
+                "template_id": context[0]
+            }
+            open_new_window(self.frame, UpdateFrame, context)
+
         if event_number == 1:
             return copy_clicked
         elif event_number == 2:
             return on_text_change
         elif event_number == 3:
             return on_tab_selected
+        elif event_number == 4:
+            return open_frames_update_window
 
-        print(f"Setting event handlers for {self.frame_name}")
         return None
+

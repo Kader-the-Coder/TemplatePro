@@ -16,7 +16,7 @@ class LeftFrame(BaseFrame):
         frame_name (str): The name of the frame.
     """
     def __init__(self, root):
-        super().__init__(root, 'left_frame')
+        super().__init__(root)
         self.frame = self._initialize()
         self._add_widgets()
         self._style_widgets()
@@ -24,7 +24,6 @@ class LeftFrame(BaseFrame):
     def _initialize(self):
         frame = ttk.Frame(self.root, borderwidth=config.FRAME_BORDER_WIDTH, relief=config.FRAME_RELIEF)
         frame.grid(row=1, column=0, rowspan=2, sticky="nsw", padx=config.PADDING, pady=config.PADDING)
-        print(f"Initializing {self.root.winfo_name()}.{self.frame_name}")
         return frame
 
     def _add_widgets(self):
@@ -39,12 +38,10 @@ class LeftFrame(BaseFrame):
 
         button_open = ttk.Button(self.frame, text="^", width=4, style="button.TButton",)
         button_open.pack(fill="x", side="bottom")
-        print(f"Adding widgets to {self.frame_name}")
 
     def _style_widgets(self):
         style = ttk.Style()
         style.configure("button.TButton", background=config.COLOR_2)
-        print(f"Styling widgets in {self.frame_name}")
 
     def _set_event_handlers(self, event_number):
         def copy_clicked(text):
@@ -54,5 +51,4 @@ class LeftFrame(BaseFrame):
         if event_number == 1:
             return copy_clicked
 
-        print(f"Setting event handlers for {self.frame_name}")
         return None
