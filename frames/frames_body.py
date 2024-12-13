@@ -19,11 +19,11 @@ class BodyFrame(BaseFrame):
     Attributes:
         frame_name (str): The name of the frame.
     """
-    def __init__(self, root):
-        super().__init__(root)
+    def __init__(self, root_frame):
+        super().__init__(root_frame)
         self.frame, self.search_entry = self._initialize()
         self.search_tags = None
-        self.tab = 0
+        self.tab = self.root_frame.default_tab
         self._add_widgets(self.search_tags)
         self._style_widgets()
 
@@ -96,6 +96,7 @@ class BodyFrame(BaseFrame):
             highlight_frames(frames)
             
         notebook.grid(row=0, column=0, sticky="nsew")
+        notebook.select(self.root_frame.default_tab)
 
     def _style_widgets(self):
         style = ttk.Style()
@@ -156,6 +157,7 @@ class BodyFrame(BaseFrame):
             # Get the currently selected tab index
             selected_tab_index = event.widget.index(event.widget.select())
             self.tab = selected_tab_index
+            self.root_frame.default_tab = self.tab
             print(f"Tab {selected_tab_index + 1} selected")
 
         def open_frames_update_window(context):
@@ -166,7 +168,8 @@ class BodyFrame(BaseFrame):
                 "template": context[2],
                 "template_id": context[0]
             }
-            open_new_window(self.frame, UpdateFrame, context)
+            self.context.update(context)
+            open_new_window(self, UpdateFrame)
 
         if event_number == 1:
             return copy_clicked
@@ -178,4 +181,3 @@ class BodyFrame(BaseFrame):
             return open_frames_update_window
 
         return None
-

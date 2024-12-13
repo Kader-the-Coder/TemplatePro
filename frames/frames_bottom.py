@@ -43,7 +43,7 @@ class BottomFrame(BaseFrame):
 
     def _set_event_handlers(self, event_number):
         def open_frames_update_window():
-            open_new_window(self.frame, UpdateFrame, None)
+            open_new_window(self, UpdateFrame)
 
         if event_number == 1:
             return open_frames_update_window

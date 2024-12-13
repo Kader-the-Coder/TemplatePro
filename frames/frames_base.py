@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+import tkinter as tk
 
 
 class BaseFrame(ABC):
@@ -9,9 +10,10 @@ class BaseFrame(ABC):
     methods for initializing the frame layout, adding widgets,
     styling widgets, and setting event handlers.
     """
-    def __init__(self, root):
-        self.root = root
-        self.root.reload_widgets = self.reload_widgets
+    def __init__(self, root_frame):
+        self.root_frame = None if isinstance(root_frame, tk.Tk) else root_frame
+        self.root = getattr(root_frame, 'root', root_frame)
+        self.context = {}
 
     @abstractmethod
     def _initialize(self):
@@ -39,11 +41,13 @@ class BaseFrame(ABC):
         """
     def _on_reload(self):
         """Callback method to be implemented by subclasses."""
-        self.root.reload_widgets()
+        self.root_frame.reload_frames()
 
-    def reload_widgets(self):
+    def reload_frames(self):
         """Clear and repopulate the window's content."""
-        for widget in self.root.winfo_children():
-            widget.destroy()
-        self._on_reload()
-
+        if self.root_frame is None:
+            for widget in self.root.winfo_children():
+                widget.destroy()
+            self._add_widgets()
+        else:
+            self._on_reload()

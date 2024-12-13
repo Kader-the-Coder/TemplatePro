@@ -12,9 +12,8 @@ from data import config
 class TemplatePro(BaseFrame):
     """Main application class for the Productivity App."""    
 
-    def __init__(self, root):
-        super().__init__(root)
-        self.root = root
+    def __init__(self, root_frame):
+        super().__init__(root_frame)
         self.default_tab = 0
         self.frames_loaded = False
 
@@ -45,11 +44,10 @@ class TemplatePro(BaseFrame):
 
     def _add_widgets(self):
         """Create and place frames and widgets."""
-        print("<-----------------HERE----------------->")
-        LeftFrame(self.root)
-        TopFrame(self.root)
-        BottomFrame(self.root)
-        BodyFrame(self.root)
+        LeftFrame(self)
+        TopFrame(self)
+        BottomFrame(self)
+        BodyFrame(self)
 
     def configure_grid(self):
         """Configure grid row and column weights and minimum sizes."""

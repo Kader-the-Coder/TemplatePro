@@ -15,10 +15,10 @@ class UpdateFrame(BaseFrame):
     Attributes:
         frame_name (str): Name of the frame.
     """
-    def __init__(self, root, new_root, context):
-        super().__init__(root)
-        self.new_root = new_root
-        self.context = context
+    def __init__(self, root_frame):
+        super().__init__(root_frame)
+        self.new_root = root_frame.context["new_window"]
+        self.context = root_frame.context
         self.frame_top, self.frame_bottom = self._initialize()
         self._add_widgets()
         self._style_widgets()
@@ -78,6 +78,7 @@ class UpdateFrame(BaseFrame):
             self.root.geometry(f"{new_width}x{new_height}+{new_x}+{new_y}")
             self.new_root.destroy()  # Close the new window
             self.root.deiconify()  # Show the parent window again
+            self.reload_frames()
 
         if event_number == 1:
             return close_window
@@ -169,7 +170,7 @@ def configure_top_frame(frame, context, func):
     cancel_clear_template_button = None
     delete_template_button = None
     # If a template has been selected
-    if context:
+    if "template_id" in context:
         category.insert(0, context["category"])
         name.insert(0, context["name"])
         tags.insert(0, ", ".join(context["tags"]))
