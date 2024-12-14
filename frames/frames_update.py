@@ -50,9 +50,8 @@ class UpdateFrame(BaseFrame):
         paned_window.add(frame_bottom)
 
         # Configure columns for frame_bottom
-        frame_bottom.grid_columnconfigure(0, weight=0)
+        frame_bottom.grid_columnconfigure(0, weight=1)
         frame_bottom.grid_columnconfigure(1, weight=1)
-        frame_bottom.grid_columnconfigure(2, weight=0)
 
         # Configure rows and columns of self.root for the PanedWindow
         self.new_root.grid_rowconfigure(0, weight=1)
@@ -62,7 +61,7 @@ class UpdateFrame(BaseFrame):
 
     def _add_widgets(self):
         configure_top_frame(self.frame_top, self.context, self._set_event_handlers(1))
-        configure_bottom_frame(self.frame_bottom, self._set_event_handlers(1))
+        configure_bottom_frame(self.frame_bottom, (self._set_event_handlers(1), self._set_event_handlers(2), self._set_event_handlers(3)))
 
     def _style_widgets(self):
         pass
@@ -80,8 +79,18 @@ class UpdateFrame(BaseFrame):
             self.root.deiconify()  # Show the parent window again
             self.reload_frames()
 
+        def import_templates():
+            print("DEBUG: Importing templates...")
+
+        def export_templates():
+            print("DEBUG: Exporting templates...")
+
         if event_number == 1:
             return close_window
+        if event_number == 2:
+            return import_templates
+        if event_number == 3:
+            return export_templates
 
         return None
 
@@ -210,8 +219,20 @@ def configure_bottom_frame(frame, func):
         func: A function to be called when the close button is pressed. It 
               should accept the top-level window as its argument.
     """
+    upload_button = tk.Button(
+        frame, text="Import Templates",
+        command=func[1]
+    )
+    upload_button.grid(row=0, column=0, sticky="ew")
+
+    export_button = tk.Button(
+        frame, text="Export Templates",
+        command=func[2]
+    )
+    export_button.grid(row=0, column=1, sticky="ew")
+
     close_button = tk.Button(
         frame, text="Close",
-        command=lambda: func(frame.winfo_toplevel())
+        command=lambda: func[0](frame.winfo_toplevel())
     )
-    close_button.grid(column=1, sticky="ew")
+    close_button.grid(row=1, column=0, columnspan=2, sticky="ew")
