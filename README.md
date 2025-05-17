@@ -75,15 +75,23 @@ TemplatePro is an application designed to help users manage templates with basic
 ## Project Structure
 
 TemplatePro/
+│
 ├── data/
-│   ├── db.sqlite3        # SQLite database file
-│   └── init_db.py        # Database initialization script
+│   ├── db.sqlite3          # SQLite database file
+│   └── init_db.py          # Database initialization script
+│
 ├── frames/
-│   ├── frames_main.py     # Main GUI frames and logic
-│   └── ...                # Other frames for the application
-├── main.py                # Main entry point of the application
-├── requirements.txt       # List of dependencies
-└── README.md              # Project documentation
+│   ├── frames_main.py      # Main GUI frames and logic
+│   ├── frames_base.py      # Base frame logic
+│   ├── frames_body.py      # Body frame logic
+│   ├── frames_bottom.py    # Bottom frame logic
+│   ├── frames_left.py      # Left frame logic
+│   ├── frames_top.py       # Top frame logic
+│   └── frames_update.py    # Update frame logic
+│
+├── main.py                 # Main entry point of the application
+├── requirements.txt        # List of dependencies
+└── README.md               # Project documentation
 
 ---
 
